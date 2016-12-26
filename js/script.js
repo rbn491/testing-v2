@@ -3,6 +3,7 @@ function init()
 	var stats = initStats();
 
 	var scene = new THREE.Scene();
+	scene.fog = new THREE.Fog(0xffffff, .015, 50);
 	var fov = 45;
 	var camera = new THREE.PerspectiveCamera(fov, window.innerWidth / window.innerHeight, 0.1, 1000);
 	
