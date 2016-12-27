@@ -2,113 +2,95 @@ function init()
 {
 	var stats = initStats();
 
-	var scene = new THREE.Scene();
-	// scene.fog = new THREE.Fog(0xffffff, .015, 100);
-	var fov = 45;
-	var camera = new THREE.PerspectiveCamera(fov, window.innerWidth / window.innerHeight, .1, 1000);
-	camera.lookAt(scene.position);
-	
 	var renderer = new THREE.WebGLRenderer(
 	{
 		antialias: true
 	});
-    renderer.setClearColor(new THREE.Color(0xeeeeee));
-	renderer.setSize(window.innerWidth, window.innerHeight);
-	renderer.shadowMapEnabled = true;
-
+	var scene = new THREE.Scene();
 	var axes = new THREE.AxisHelper(100);
-	scene.add(axes);
+	var fov = 45;
+	var camera = new THREE.PerspectiveCamera(fov, window.innerWidth / window.innerHeight, .1, 1000);
+	var spotLight = new THREE.SpotLight(0xffffff);
+	var ambientLight = new THREE.AmbientLight(0x0c0c0c);
 
-	var planeGeometry = new THREE.PlaneGeometry(100, 100);
+	var planeGeometry = new THREE.PlaneGeometry(1200, 1200);
 	var planeMaterial = new THREE.MeshBasicMaterial(
 	{
 		color: 0xcccccc
 	});
 	var plane = new THREE.Mesh(planeGeometry, planeMaterial);
-	plane.receiveShadow = true;
 
+	var torusGeometry = new THREE.TorusGeometry(10, 3, 16, 12);
+	var torusMaterial = new THREE.MeshLambertMaterial(
+	{
+		color: 0xCC1E14
+	});
+	var torus = new THREE.Mesh(torusGeometry, torusMaterial);
+
+	var octahedronGeometry = new THREE.OctahedronGeometry(12, 0);
+	var octahedronMaterial = new THREE.MeshLambertMaterial(
+	{
+		color: 0xAA9900
+	});
+	var octahedron = new THREE.Mesh(octahedronGeometry, octahedronMaterial);
+
+
+	var icosahedronGeometry = new THREE.IcosahedronGeometry(12, 0);
+	var icosahedronMaterial = new THREE.MeshLambertMaterial(
+	{
+		color: 0x00FFF3
+	});
+	var icosahedron = new THREE.Mesh(icosahedronGeometry, icosahedronMaterial);
+
+    renderer.setClearColor(new THREE.Color(0xeeeeee));
+	renderer.setSize(window.innerWidth, window.innerHeight);
+	renderer.shadowMapEnabled = true;
+	
+	camera.position.x = 90;
+	camera.position.y = 45;
+	camera.position.z = 90;
+	camera.lookAt(scene.position);
+
+	spotLight.position.set(60, 70, -40);
+	spotLight.castShadow = true;
+	// scene.fog = new THREE.Fog(0xF39BFF, .015, 200);
+	
+	plane.receiveShadow = true;
 	plane.rotation.x = -.5 * Math.PI;
 	plane.position.x = 0;
 	plane.position.y = 0;
 	plane.position.z = 0;
 
-	scene.add(plane);
+	torus.receiveShadow = true;
+	torus.castShadow = true;
+	torus.position.x = 0;
+	torus.position.y = 20;
+	torus.position.z = 0;
+	torus.rotation.y = 20;
 
-	var ambientLight = new THREE.AmbientLight(0x0c0c0c);
+	octahedron.receiveShadow = true;
+	octahedron.castShadow = true;
+	octahedron.position.x = 0;
+	octahedron.position.y = 20;
+	octahedron.position.z = 40;
+
+	icosahedron.receiveShadow = true;
+	icosahedron.castShadow = true;
+	icosahedron.position.x = 0;
+	icosahedron.position.y = 20;
+	icosahedron.position.z = -40;
+
+
+	scene.add(axes);
+	scene.add(spotLight);
 	scene.add(ambientLight);
 
-	var spotLight = new THREE.SpotLight(0xffffff);
-	spotLight.position.set(-40, 60, -10);
-	spotLight.castShadow = true;
-	scene.add(spotLight);
+	// scene.add(plane);
+	scene.add(torus);
+	scene.add(octahedron);
+	scene.add(icosahedron);
 
 	document.getElementById("container").appendChild(renderer.domElement);
-
-	var step = 0;
-	var controls = new function()
-	{
-		this.rotationSpeed = .02;
-		this.numberOfObjects = scene.children.length;
-
-		this.cameraX = 20;
-		this.cameraY = 20;
-		this.cameraZ = 90;
-		this.cameraRotationX = 0;
-		this.cameraRotationY = 0;
-		this.cameraRotationZ = 0;
-		this.fov = 45;
-
-		this.removeCube = function()
-		{
-			var allChildren = scene.children;
-			var lastObject = allChildren[allChildren.length - 1];
-
-			if(lastObject instanceof THREE.Mesh)
-			{
-				scene.remove(lastObject);
-				this.numberOfObjects = scene.children.length;
-			}
-		};
-
-		this.addCube = function()
-		{
-			var cubeSize = Math.ceil((Math.random() * 3));
-			var cubeGeometry = new THREE.BoxGeometry(cubeSize, cubeSize, cubeSize);
-			var cubeMaterial = new THREE.MeshLambertMaterial(
-			{
-				color: Math.random() * 0xffffff
-			});
-			var cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
-			cube.castShadow = true;
-			cube.name = "cube-1" + scene.children.length;
-
-			cube.position.x = -30 + Math.round((Math.random() * planeGeometry.parameters.width));
-			cube.position.y = Math.round((Math.random() * 5));
-			cube.position.z = -20 + Math.round((Math.random() * planeGeometry.parameters.height));
-
-			scene.add(cube);
-			this.numberOfObjects = scene.children.length;	
-		};
-
-		this.outputObjects = function()
-		{
-			console.log(scene.children);
-		};
-	};
-
-	var gui = new dat.GUI();
-	gui.add(controls, 'rotationSpeed', 0, .5);
-	gui.add(controls, 'addCube');
-	gui.add(controls, 'removeCube');
-	gui.add(controls, 'outputObjects');
-	gui.add(controls, 'numberOfObjects').listen();
-	gui.add(controls, 'cameraX', -90, 90);
-	gui.add(controls, 'cameraY', -90, 90);
-	gui.add(controls, 'cameraZ', -90, 90);
-	gui.add(controls, 'cameraRotationX', -90, 90);
-	gui.add(controls, 'cameraRotationY', -90, 90);
-	gui.add(controls, 'cameraRotationZ', -90, 90);
-	gui.add(controls, 'fov', 45, 120);
 
 	render();
 
@@ -116,26 +98,9 @@ function init()
 	{
 		stats.update();
 
-		scene.traverse(function(e)
-		{
-			if(e instanceof THREE.Mesh && e != plane)
-			{
-				e.rotation.x += controls.rotationSpeed;
-				e.rotation.y += controls.rotationSpeed;
-				e.rotation.z += controls.rotationSpeed;
-			}
-		});
-
-		camera.position.x = controls.cameraX;
-		camera.position.y = controls.cameraY;
-		camera.position.z = controls.cameraZ;
-
-		camera.rotation.x = controls.cameraRotationX;
-		camera.rotation.y = controls.cameraRotationY;
-		camera.rotation.z = controls.cameraRotationZ;
-		camera.fov = controls.fov;
-
-		camera.updateProjectionMatrix();
+		torus.rotation.y += .04;
+		octahedron.rotation.y += .04;
+		icosahedron.rotation.y += .04;
 
 		requestAnimationFrame(render);
 		renderer.render(scene, camera);
@@ -143,26 +108,16 @@ function init()
 
 	function initStats()
 	{
-		var stats = new Stats();
+        var stats = new Stats();
+        stats.setMode(0); // 0: fps, 1: ms
+    
+        stats.domElement.style.position = 'absolute';
+        stats.domElement.style.left = '0px';
+        stats.domElement.style.top = '0px';
+        document.getElementById("stats").appendChild(stats.domElement);
 
-		stats.setMode(0);
-		stats.domElement.style.position = 'absolute';
-		stats.domElement.style.left = '0px';
-		stats.domElement.style.top = '0px';
-
-
-		document.getElementById("stats").appendChild(stats.domElement);
-
-		return stats;
-	}
+        return stats;
+    }
 }
-
-// function onResize()
-// {
-// 	camera.aspect = window.innerWidth / window.innerHeight;
-// 	camera.updateProjectionMatrix();
-// 	renderer.setSize(window.innerWidth, window.innerHeight);
-// 	console.log('fire');
-// }
 
 window.onload = init
