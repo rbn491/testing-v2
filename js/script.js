@@ -3,9 +3,10 @@ function init()
 	var stats = initStats();
 
 	var scene = new THREE.Scene();
-	scene.fog = new THREE.Fog(0xffffff, .015, 50);
+	// scene.fog = new THREE.Fog(0xffffff, .015, 100);
 	var fov = 45;
-	var camera = new THREE.PerspectiveCamera(fov, window.innerWidth / window.innerHeight, 0.1, 1000);
+	var camera = new THREE.PerspectiveCamera(fov, window.innerWidth / window.innerHeight, .1, 1000);
+	camera.lookAt(scene.position);
 	
 	var renderer = new THREE.WebGLRenderer(
 	{
@@ -15,10 +16,10 @@ function init()
 	renderer.setSize(window.innerWidth, window.innerHeight);
 	renderer.shadowMapEnabled = true;
 
-	var axes = new THREE.AxisHelper(20);
+	var axes = new THREE.AxisHelper(100);
 	scene.add(axes);
 
-	var planeGeometry = new THREE.PlaneGeometry(60, 20);
+	var planeGeometry = new THREE.PlaneGeometry(100, 100);
 	var planeMaterial = new THREE.MeshBasicMaterial(
 	{
 		color: 0xcccccc
@@ -32,11 +33,6 @@ function init()
 	plane.position.z = 0;
 
 	scene.add(plane);
-
-	camera.position.x = 0;
-	camera.position.y = 0;
-	camera.position.z = 0;
-	camera.lookAt(scene.position);
 
 	var ambientLight = new THREE.AmbientLight(0x0c0c0c);
 	scene.add(ambientLight);
@@ -54,9 +50,9 @@ function init()
 		this.rotationSpeed = .02;
 		this.numberOfObjects = scene.children.length;
 
-		this.cameraX = 0;
-		this.cameraY = 0;
-		this.cameraZ = 0;
+		this.cameraX = 20;
+		this.cameraY = 20;
+		this.cameraZ = 90;
 		this.cameraRotationX = 0;
 		this.cameraRotationY = 0;
 		this.cameraRotationZ = 0;
