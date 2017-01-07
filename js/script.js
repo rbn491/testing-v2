@@ -3,7 +3,6 @@ function init()
 	var stats = initStats();
 
 	var scene = new THREE.Scene();
-	// scene.fog = new THREE.Fog(0xffffff, .015, 100);
 	var fov = 45;
 	var camera = new THREE.PerspectiveCamera(fov, window.innerWidth / window.innerHeight, .1, 1000);
 	camera.lookAt(scene.position);
@@ -42,7 +41,7 @@ function init()
 	spotLight.castShadow = true;
 	scene.add(spotLight);
 
-	document.getElementById("container").appendChild(renderer.domElement);
+	document.getElementById("container-1").appendChild(renderer.domElement);
 
 	var step = 0;
 	var controls = new function()
@@ -144,25 +143,12 @@ function init()
 	function initStats()
 	{
 		var stats = new Stats();
-
 		stats.setMode(0);
-		stats.domElement.style.position = 'absolute';
-		stats.domElement.style.left = '0px';
-		stats.domElement.style.top = '0px';
-
 
 		document.getElementById("stats").appendChild(stats.domElement);
 
 		return stats;
 	}
 }
-
-// function onResize()
-// {
-// 	camera.aspect = window.innerWidth / window.innerHeight;
-// 	camera.updateProjectionMatrix();
-// 	renderer.setSize(window.innerWidth, window.innerHeight);
-// 	console.log('fire');
-// }
 
 window.onload = init

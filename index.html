@@ -1,14 +1,37 @@
 <!doctype html>
-<title>THREE JS #1</title>
+<title>THREE JS / SWIPER EXPERIMENT</title>
 <head>
-	<link href="css/application.css" media="screen" rel="stylesheet" type="text/css" />
+	<link href="css/libs/siper.min.css" media="screen" rel="stylesheet" type="text/css">
+	<link href="css/application.css" media="screen" rel="stylesheet" type="text/css">
   	<script src="js/libs/three.min.js"></script>
   	<script src="js/libs/stats.min.js"></script>
   	<script src="js/libs/dat.gui.min.js"></script>
+  	<script src="js/libs/swiper.min.js"></script>
+  	<script src="js/swiper.js"></script>
   	<script src="js/script.js"></script>
 </head>
 <body>
 	<div id="stats"></div>
-	<div id="container"></div>
+	<div class="content-wrapper">
+		<div class="slider">
+			<div class="swiper-container">
+				<div class="swipe-wrapper">
+					<div class="swiper-slider">
+						<h2 class="slide-heading">#container_1</h2>
+						<div id="container-1"></div>
+					</div>
+					<div class="swiper-slider">
+						<h2 class="slide-heading">#container_2</h2>
+						<div id="container-2"></div>
+					</div>
+					<div class="swiper-slider">
+						<h2 class="slide-heading">#container_3</h2>
+						<div id="container-3"></div>
+					</div>
+				</div>
+				<div class="swiper-pagination"></div>
+			</div>
+		</div>
+	</div>
 </body>
 </html>
